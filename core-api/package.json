@@ -1,0 +1,22 @@
+{
+  "name": "core-api",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "type": "module",
+  "scripts": {
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.7.5",
+    "class-validator": "^0.14.0",
+    "graphql": "^16.7.1",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^2.0.0-beta.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.2",
+    "typescript": "^5.1.5"
+  }
+}
