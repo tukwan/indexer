@@ -18,12 +18,29 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  createProject: Project;
+};
+
+
+export type MutationCreateProjectArgs = {
+  projectInput: ProjectInput;
+};
+
 export type Project = {
   __typename?: 'Project';
   artistAddress: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   ipfsCid: Scalars['String']['output'];
   timeOfMint: Scalars['DateTime']['output'];
+};
+
+export type ProjectInput = {
+  artistAddress: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+  ipfsCid: Scalars['String']['input'];
+  timeOfMint: Scalars['DateTime']['input'];
 };
 
 export type Query = {
@@ -36,6 +53,13 @@ export type Query = {
 export type QueryProjectArgs = {
   id: Scalars['ID']['input'];
 };
+
+export type CreateProjectMutationVariables = Exact<{
+  projectInput: ProjectInput;
+}>;
+
+
+export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', id: string, ipfsCid: string, artistAddress: string, timeOfMint: any } };
 
 export type GetProjectByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -50,6 +74,16 @@ export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetProjectsQuery = { __typename?: 'Query', projects: Array<{ __typename?: 'Project', id: string, ipfsCid: string, artistAddress: string, timeOfMint: any }> };
 
 
+export const CreateProjectDocument = gql`
+    mutation createProject($projectInput: ProjectInput!) {
+  createProject(projectInput: $projectInput) {
+    id
+    ipfsCid
+    artistAddress
+    timeOfMint
+  }
+}
+    `;
 export const GetProjectByIdDocument = gql`
     query getProjectById($id: ID!) {
   project(id: $id) {
@@ -78,6 +112,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    createProject(variables: CreateProjectMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateProjectMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateProjectMutation>(CreateProjectDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createProject', 'mutation');
+    },
     getProjectById(variables: GetProjectByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetProjectByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetProjectByIdQuery>(GetProjectByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getProjectById', 'query');
     },

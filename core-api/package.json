@@ -9,8 +9,12 @@
     "start": "npm run compile && node ./dist/index.js",
     "codegen": "graphql-codegen"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@apollo/server": "^4.7.5",
+    "@prisma/client": "^4.16.1",
     "class-validator": "^0.14.0",
     "graphql": "^16.7.1",
     "reflect-metadata": "^0.1.13",
@@ -21,9 +25,10 @@
     "@graphql-codegen/client-preset": "^4.0.1",
     "@graphql-codegen/introspection": "^4.0.0",
     "@graphql-codegen/typescript-graphql-request": "^5.0.0",
-    "@graphql-codegen/typescript-react-query": "^4.1.0",
     "@types/node": "^20.3.2",
+    "prisma": "^4.16.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.5"
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6"
   }
 }

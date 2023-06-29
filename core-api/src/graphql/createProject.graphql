@@ -1,0 +1,8 @@
+mutation createProject($projectInput: ProjectInput!) {
+  createProject(projectInput: $projectInput) {
+    id
+    ipfsCid
+    artistAddress
+    timeOfMint
+  }
+}

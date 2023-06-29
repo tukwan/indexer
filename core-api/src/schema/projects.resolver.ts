@@ -1,32 +1,55 @@
-import { Resolver, Query, Arg, ID } from "type-graphql"
+import {
+  Resolver,
+  Query,
+  Arg,
+  ID,
+  Ctx,
+  Mutation,
+  InputType,
+  Field,
+} from "type-graphql"
 import { Project } from "./projects.js"
+import { prisma } from "../prismaClient.js"
 
-const mockedProjects: Project[] = [
-  {
-    id: "1",
-    ipfsCid: "ipfsCid_1",
-    artistAddress: "artistAddress_1",
-    timeOfMint: new Date("2023-06-28T10:51:50Z"),
-  },
-  {
-    id: "2",
-    ipfsCid: "ipfsCid_2",
-    artistAddress: "artistAddress_2",
-    timeOfMint: new Date("2020-01-28T10:51:50Z"),
-  },
-]
+@InputType()
+class ProjectInput implements Project {
+  @Field()
+  id!: string
+
+  @Field()
+  ipfsCid!: string
+
+  @Field()
+  artistAddress!: string
+
+  @Field()
+  timeOfMint!: Date
+}
 
 @Resolver(Project)
 export class ProjectResolver {
   @Query(() => [Project])
-  projects(): Project[] {
-    return mockedProjects
+  async projects(@Ctx() context: any): Promise<Project[] | unknown> {
+    return await prisma.project.findMany()
   }
 
   @Query(() => Project, { nullable: true })
-  project(@Arg("id", () => ID) id: string): Project | undefined {
-    const project = mockedProjects.find((project) => project.id === id)
+  async project(@Arg("id", () => ID) id: number): Promise<Project | unknown> {
+    const project = await prisma.project.findUnique({
+      where: { id },
+    })
     if (!project) throw new Error("Project not found")
     return project
+  }
+
+  @Mutation(() => Project)
+  async createProject(
+    @Arg("projectInput") projectInput: ProjectInput
+  ): Promise<Project | unknown> {
+    const newProject = await prisma.project.create({
+      data: { ...projectInput, ...{ id: parseInt(projectInput.id) } },
+    })
+
+    return newProject
   }
 }
