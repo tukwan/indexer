@@ -1,0 +1,8 @@
+query getProjectById($id: ID!) {
+  project(id: $id) {
+    id
+    ipfsCid
+    artistAddress
+    timeOfMint
+  }
+}

@@ -1,9 +1,9 @@
-import { Field, ObjectType } from "type-graphql"
+import { Field, ObjectType, ID } from "type-graphql"
 
 @ObjectType()
 export class Project {
-  @Field()
-  id!: number
+  @Field((type) => ID)
+  readonly id: string
 
   @Field()
   ipfsCid!: string
