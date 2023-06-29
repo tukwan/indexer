@@ -8,8 +8,8 @@ generator client {
 }
 
 model Project {
-  id         Int      @id
-  ipfsCid    String
+  id            Int      @id
+  ipfsCid       String
   artistAddress String
-  timeOfMint   DateTime
+  timeOfMint    DateTime
 }

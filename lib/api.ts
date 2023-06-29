@@ -14,4 +14,4 @@ export const queryClient = new QueryClient({
 
 const gqlClient = new GraphQLClient("http://localhost:4000/graphql")
 
-export const { getProjects, getProjectById} = getSdk(gqlClient)
+export const { getProjects, getProjectById, createProject } = getSdk(gqlClient)

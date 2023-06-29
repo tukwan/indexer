@@ -7,7 +7,8 @@
   "scripts": {
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen",
+    "reset": "prisma migrate reset --force"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -15,9 +16,14 @@
   "dependencies": {
     "@apollo/server": "^4.7.5",
     "@prisma/client": "^4.16.1",
+    "@types/ramda": "^0.29.2",
+    "@tzkt/sdk-api": "^2.2.0",
+    "@tzkt/sdk-events": "^2.2.0",
     "class-validator": "^0.14.0",
     "graphql": "^16.7.1",
+    "ramda": "^0.29.0",
     "reflect-metadata": "^0.1.13",
+    "tslib": "^2.6.0",
     "type-graphql": "^2.0.0-beta.2"
   },
   "devDependencies": {
