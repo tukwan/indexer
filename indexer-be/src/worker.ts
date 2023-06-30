@@ -1,13 +1,19 @@
+import dotenv from "dotenv"
 import * as R from "ramda"
 import {
   operationsGetTransactions,
   operationsGetTransactionByHash,
 } from "@tzkt/sdk-api"
 import { GraphQLClient } from "graphql-request"
-import { getSdk } from "./graphql/generated/gql"
+import { getSdk } from "./gql"
+import { checkAPIConnection } from "./helpers"
 
-const gqlClient = new GraphQLClient("http://localhost:4000/graphql")
+dotenv.config()
+
+const gqlClient = new GraphQLClient(process.env.GRAPHQL_API_URL || "")
 export const { getProjects, createProject } = getSdk(gqlClient)
+
+await checkAPIConnection()
 
 const FX_CONTRACT = "KT1Xpmp15KfqoePNW9HczFmqaGNHwadV2a3b"
 const ENTRY_POINT = "mint_issuer"
@@ -83,31 +89,13 @@ async function processTxData(txData: any) {
         })
         indexerCounter++
       } catch (error) {
-        console.log("id error:", last_issuer_minted)
-        console.log("Error:", error)
+        console.log("Project ID error:", last_issuer_minted)
+        console.log(error.response.errors[0].message)
       }
 
-      console.log("Projects: ", indexerCounter + " / " + projectsNumber)
+      console.log("Projects indexed: ", indexerCounter + " / " + projectsNumber)
     }
   }
 }
 
-const convertIpfsUrl = (ipfsUrl: string): string => {
-  const hash = ipfsUrl.split("ipfs://")[1]
-  return `https://ipfs.io/ipfs/${hash}`
-}
-
-async function fetchData() {
-  try {
-    const url = convertIpfsUrl(result[0].metadataIpfs)
-
-    const response = await fetch(url)
-    const data = await response.json()
-
-    console.log(data)
-  } catch (error) {
-    console.error("Error fetching data from IPFS:", error)
-  }
-}
-
-// fetchData()
+console.log("Indexing finished.")

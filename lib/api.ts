@@ -1,6 +1,6 @@
 import { GraphQLClient } from "graphql-request"
 import { QueryClient } from "@tanstack/react-query"
-import { getSdk } from "../core-api/src/graphql/generated/gql"
+import { getSdk } from "./gql"
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -12,6 +12,6 @@ export const queryClient = new QueryClient({
   },
 })
 
-const gqlClient = new GraphQLClient("http://localhost:4000/graphql")
+const gqlClient = new GraphQLClient(process.env.GRAPHQL_API_URL || "")
 
 export const { getProjects, getProjectById, createProject } = getSdk(gqlClient)

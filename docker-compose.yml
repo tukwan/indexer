@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   postgres:
     image: postgres:10.3
@@ -7,8 +7,38 @@ services:
       - POSTGRES_USER=john
       - POSTGRES_PASSWORD=wick
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - "5432:5432"
+
+  graphql-api:
+    build:
+      context: ./graphql-api
+    command: bash -c 'while !</dev/tcp/postgres/5432; do sleep 2; done; npm run migrate && npm start'
+    environment:
+      - DATABASE_URL=postgresql://john:wick@postgres:5432/indexerdb?schema=public
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+
+  indexer-be:
+    build:
+      context: ./indexer-be
+    environment:
+      - GRAPHQL_API_URL=http://graphql-api:4000
+    depends_on:
+      - graphql-api
+
+  indexer-fe:
+    build:
+      context: ./
+    environment:
+      - GRAPHQL_API_URL=http://graphql-api:4000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - graphql-api
+
 volumes:
-  postgres:
+  postgres_data:

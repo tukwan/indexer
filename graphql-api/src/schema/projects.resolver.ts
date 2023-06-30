@@ -46,9 +46,19 @@ export class ProjectResolver {
   async createProject(
     @Arg("projectInput") projectInput: ProjectInput
   ): Promise<Project | unknown> {
-    const newProject = await prisma.project.create({
-      data: { ...projectInput, ...{ id: parseInt(projectInput.id) } },
-    })
+    let newProject
+
+    try {
+      newProject = await prisma.project.create({
+        data: { ...projectInput, ...{ id: parseInt(projectInput.id) } },
+      })
+    } catch (error) {
+      if (error.code === "P2002") {
+        throw new Error("Project already indexed, skipping...")
+      } else {
+        throw error
+      }
+    }
 
     return newProject
   }

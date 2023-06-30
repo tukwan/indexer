@@ -9,7 +9,12 @@
     "esModuleInterop": true,
     "types": ["node"],
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
   "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

@@ -1,5 +1,7 @@
-import { EventsService, Subscription } from "@tzkt/sdk-events"
+import { EventsService } from "@tzkt/sdk-events"
 const FX_CONTRACT = "KT1Xpmp15KfqoePNW9HczFmqaGNHwadV2a3b"
+
+//@ts-ignore
 global.self = global
 
 const client = new EventsService({

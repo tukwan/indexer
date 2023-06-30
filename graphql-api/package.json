@@ -1,40 +1,32 @@
 {
-  "name": "core-api",
+  "name": "graphql-api",
   "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
   "type": "module",
   "scripts": {
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js",
-    "codegen": "graphql-codegen",
-    "reset": "prisma migrate reset --force"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "build": "npm run generate && npm run migrate",
+    "generate": "npx prisma generate",
+    "migrate": "npx prisma migrate dev",
+    "reset": "prisma migrate reset --force",
+    "codegen": "graphql-codegen"
   },
   "dependencies": {
     "@apollo/server": "^4.7.5",
     "@prisma/client": "^4.16.1",
-    "@types/ramda": "^0.29.2",
-    "@tzkt/sdk-api": "^2.2.0",
-    "@tzkt/sdk-events": "^2.2.0",
     "class-validator": "^0.14.0",
     "graphql": "^16.7.1",
-    "ramda": "^0.29.0",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.6.0",
     "type-graphql": "^2.0.0-beta.2"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^4.0.1",
-    "@graphql-codegen/client-preset": "^4.0.1",
-    "@graphql-codegen/introspection": "^4.0.0",
     "@graphql-codegen/typescript-graphql-request": "^5.0.0",
+    "@graphql-codegen/typescript-operations": "^4.0.1",
     "@types/node": "^20.3.2",
     "prisma": "^4.16.1",
     "ts-node": "^10.9.1",
-    "tsx": "^3.12.7",
+    "tslib": "^2.6.0",
     "typescript": "^5.1.6"
   }
 }
