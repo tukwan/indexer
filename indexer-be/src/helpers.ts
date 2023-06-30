@@ -1,15 +1,27 @@
-import dotenv from "dotenv"
+import { getSdk, Project } from "./gql"
+import { GraphQLClient } from "graphql-request"
+import {
+  MAX_RETRY,
+  TIMEOUT,
+  GRAPHQL_API_HEALTH_CHECK,
+  GRAPHQL_API_URL,
+} from "./constants"
 
-dotenv.config()
+const gqlClient = new GraphQLClient(GRAPHQL_API_URL || "")
+const { createProject } = getSdk(gqlClient)
 
-const MAX_RETRY = 20
-const TIMEOUT = 2000
-const GRAPHQL_API_HEALTH_CHECK = `${process.env.GRAPHQL_API_URL}?query=%7B__typename%7D`
+export async function addProjectToDatabase(project: Project) {
+  try {
+    await createProject({ projectInput: { ...project } })
+  } catch (error) {
+    console.log(error.response.errors[0].message)
+  }
+}
 
 export async function checkAPIConnection(retry = 0): Promise<void> {
   try {
     await fetch(GRAPHQL_API_HEALTH_CHECK)
-    console.log("Connection successful!")
+    console.log("Connection to API successful!")
   } catch (error) {
     retry += 1
     console.log(`Failed to connect on attempt: ${retry}`)
@@ -22,23 +34,28 @@ export async function checkAPIConnection(retry = 0): Promise<void> {
   }
 }
 
-const convertIpfsUrl = (ipfsUrl: string): string => {
-  const hash = ipfsUrl.split("ipfs://")[1]
-  return `https://ipfs.io/ipfs/${hash}`
-}
+export const delay = (ms = 1000) =>
+  new Promise((resolve) => setTimeout(resolve, ms))
 
-async function fetchData() {
-  try {
-    // @ts-ignore
-    const url = convertIpfsUrl(result[0].metadataIpfs)
+// async function fetchData() {
+//   try {
+//     const url = convertIpfsUrl(result[0].metadataIpfs)
 
-    const response = await fetch(url)
-    const data = await response.json()
+//     const response = await fetch(url)
+//     const data = await response.json()
 
-    console.log(data)
-  } catch (error) {
-    console.error("Error fetching data from IPFS:", error)
-  }
-}
+//     console.log(data)
+//   } catch (error) {
+//     console.error("Error fetching data from IPFS:", error)
+//   }
+// }
 
-// fetchData()
+// const convertIpfsUrl = (ipfsUrl: string): string | null => {
+//   if (!ipfsUrl.startsWith("ipfs://")) {
+//     console.error("Invalid IPFS URL: " + ipfsUrl)
+//     return null
+//   }
+
+//   const hash = ipfsUrl.split("ipfs://")[1]
+//   return `https://ipfs.io/ipfs/${hash}`
+// }

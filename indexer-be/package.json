@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "tsx src/worker.ts"
+    "start": "tsx src/index.ts"
   },
   "dependencies": {
     "@tzkt/sdk-api": "^2.2.0",
