@@ -3,7 +3,6 @@ import {
   Query,
   Arg,
   ID,
-  Ctx,
   Mutation,
   InputType,
   Field,
@@ -14,7 +13,7 @@ import { prisma } from "../prismaClient.js"
 @InputType()
 class ProjectInput implements Project {
   @Field()
-  id!: string
+  id!: number
 
   @Field()
   ipfsCid!: string
@@ -29,14 +28,15 @@ class ProjectInput implements Project {
 @Resolver(Project)
 export class ProjectResolver {
   @Query(() => [Project])
-  async projects(@Ctx() context: any): Promise<Project[] | unknown> {
+  async projects(): Promise<Project[] | unknown> {
+    // TODO: add limit and offset
     return await prisma.project.findMany()
   }
 
   @Query(() => Project, { nullable: true })
-  async project(@Arg("id", () => ID) id: number): Promise<Project | unknown> {
+  async project(@Arg("id", () => ID) id: string): Promise<Project | unknown> {
     const project = await prisma.project.findUnique({
-      where: { id },
+      where: { id: parseInt(id) },
     })
     if (!project) throw new Error("Project not found")
     return project
@@ -49,9 +49,7 @@ export class ProjectResolver {
     let newProject
 
     try {
-      newProject = await prisma.project.create({
-        data: { ...projectInput, ...{ id: parseInt(projectInput.id) } },
-      })
+      newProject = await prisma.project.create({ data: projectInput })
     } catch (error) {
       if (error.code === "P2002") {
         throw new Error("Project already indexed, skipping...")

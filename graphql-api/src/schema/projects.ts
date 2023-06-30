@@ -3,7 +3,7 @@ import { Field, ObjectType, ID } from "type-graphql"
 @ObjectType()
 export class Project {
   @Field((type) => ID)
-  readonly id: string
+  readonly id: number
 
   @Field()
   ipfsCid!: string

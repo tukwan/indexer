@@ -3,13 +3,14 @@ import {
   operationsGetTransactions,
   operationsGetTransactionByHash,
 } from "@tzkt/sdk-api"
-import { checkAPIConnection, delay, addProjectToDatabase } from "./helpers"
+import { checkAPIConnection, delay, addProjectToDatabase } from "./utils"
 import {
   FX_CONTRACT,
   ENTRY_POINT,
   MAX_PROJECTS_NUMBER_TO_INDEX,
 } from "./constants"
 import { subscribeToFXContract } from "./subscription"
+import { Project } from "./gql"
 
 await checkAPIConnection() // Check if graphql-api is up
 
@@ -63,8 +64,8 @@ async function processTxData(txData: any) {
     if (isMinterTx) {
       console.log("Project id:", last_issuer_minted)
 
-      const project = {
-        id: last_issuer_minted,
+      const project: Project = {
+        id: parseInt(last_issuer_minted),
         artistAddress: address,
         ipfsCid: Buffer.from(metadata, "hex").toString("utf8"),
         timeOfMint: item.timestamp,
@@ -78,7 +79,7 @@ async function processTxData(txData: any) {
 }
 
 console.log("Indexing finished.")
-console.log("\nListening for new FX Contract operations. Exit with Ctrl+C.")
+console.log("\nListening for new FX Contract operations. Exit with Ctrl+C.\n")
 
 // INFO: If we don't care about the order
 // const promises = projectsHashes.map(async (projectHash) => {

@@ -10,7 +10,7 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
+  ID: { input: number; output: string | number; }
   String: { input: string; output: string; }
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
@@ -38,7 +38,7 @@ export type Project = {
 
 export type ProjectInput = {
   artistAddress: Scalars['String']['input'];
-  id: Scalars['String']['input'];
+  id: Scalars['Float']['input'];
   ipfsCid: Scalars['String']['input'];
   timeOfMint: Scalars['DateTime']['input'];
 };
@@ -59,19 +59,19 @@ export type CreateProjectMutationVariables = Exact<{
 }>;
 
 
-export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', id: string, ipfsCid: string, artistAddress: string, timeOfMint: any } };
+export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', id: string | number, ipfsCid: string, artistAddress: string, timeOfMint: any } };
 
 export type GetProjectByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetProjectByIdQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, ipfsCid: string, artistAddress: string, timeOfMint: any } | null };
+export type GetProjectByIdQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string | number, ipfsCid: string, artistAddress: string, timeOfMint: any } | null };
 
 export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProjectsQuery = { __typename?: 'Query', projects: Array<{ __typename?: 'Project', id: string, ipfsCid: string, artistAddress: string, timeOfMint: any }> };
+export type GetProjectsQuery = { __typename?: 'Query', projects: Array<{ __typename?: 'Project', id: string | number, ipfsCid: string, artistAddress: string, timeOfMint: any }> };
 
 
 export const CreateProjectDocument = gql`

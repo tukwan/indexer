@@ -11,6 +11,14 @@ const config: CodegenConfig = {
         "typescript-operations",
         "typescript-graphql-request",
       ],
+      config: {
+        scalars: {
+          ID: {
+            input: "number",
+            output: "string | number",
+          },
+        },
+      },
     },
   },
 }

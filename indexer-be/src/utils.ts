@@ -36,26 +36,3 @@ export async function checkAPIConnection(retry = 0): Promise<void> {
 
 export const delay = (ms = 1000) =>
   new Promise((resolve) => setTimeout(resolve, ms))
-
-// async function fetchData() {
-//   try {
-//     const url = convertIpfsUrl(result[0].metadataIpfs)
-
-//     const response = await fetch(url)
-//     const data = await response.json()
-
-//     console.log(data)
-//   } catch (error) {
-//     console.error("Error fetching data from IPFS:", error)
-//   }
-// }
-
-// const convertIpfsUrl = (ipfsUrl: string): string | null => {
-//   if (!ipfsUrl.startsWith("ipfs://")) {
-//     console.error("Invalid IPFS URL: " + ipfsUrl)
-//     return null
-//   }
-
-//   const hash = ipfsUrl.split("ipfs://")[1]
-//   return `https://ipfs.io/ipfs/${hash}`
-// }
