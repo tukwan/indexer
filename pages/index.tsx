@@ -3,8 +3,13 @@ import { queryClient, getProjects } from "@/lib/api"
 import { Spinner } from "@/components/Spinner"
 import { ProjectCard } from "@/components/ProjectCard"
 
+// TODO: Pagination / infinite scroll
+const MAX_PROJECTS_PER_PAGE = 30
+
 export default function Projects() {
-  const { data, isLoading } = useQuery(["projects"], () => getProjects())
+  const { data, isLoading } = useQuery(["projects"], () =>
+    getProjects({ take: MAX_PROJECTS_PER_PAGE, orderBy: "desc" })
+  )
 
   if (isLoading) return <Spinner title="Loading projects..." />
 
@@ -26,7 +31,9 @@ export default function Projects() {
 }
 
 export async function getServerSideProps() {
-  await queryClient.prefetchQuery(["projects"], () => getProjects())
+  await queryClient.prefetchQuery(["projects"], () =>
+    getProjects({ take: MAX_PROJECTS_PER_PAGE, orderBy: "desc" })
+  )
 
   return {
     props: {

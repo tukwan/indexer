@@ -1,8 +1,0 @@
-query getProjects {
-  projects {
-    id
-    ipfsCid
-    artistAddress
-    timeOfMint
-  }
-}

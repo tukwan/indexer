@@ -4,11 +4,11 @@ This project is designed to index the transactions on the `mint_issuer` entry po
 
 ## Setup and Running
 
-This project uses Docker for easy setup and running.
+The project uses Docker for easy setup and running.
 
 `docker-compose up -d`
 
-This will setup all required services in individual containers, install all dependencies and start the application.
+It will setup all required services in individual containers, install all dependencies and start the application.
 
 Visit [http://localhost:3000](http://localhost:3000) to view the front-end interface.
 

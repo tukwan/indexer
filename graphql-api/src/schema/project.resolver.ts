@@ -1,36 +1,23 @@
-import {
-  Resolver,
-  Query,
-  Arg,
-  ID,
-  Mutation,
-  InputType,
-  Field,
-} from "type-graphql"
-import { Project } from "./projects.js"
+import { Resolver, Query, Arg, ID, Mutation, Int } from "type-graphql"
+import { Project } from "./project.type.js"
 import { prisma } from "../prismaClient.js"
-
-@InputType()
-class ProjectInput implements Project {
-  @Field()
-  id!: number
-
-  @Field()
-  ipfsCid!: string
-
-  @Field()
-  artistAddress!: string
-
-  @Field()
-  timeOfMint!: Date
-}
+import { ProjectInput } from "./project.input.js"
 
 @Resolver(Project)
 export class ProjectResolver {
-  @Query(() => [Project])
-  async projects(): Promise<Project[] | unknown> {
-    // TODO: add limit and offset
-    return await prisma.project.findMany()
+  @Query(() => [Project, { nullable: true }])
+  async projects(
+    @Arg("skip", () => Int, { defaultValue: 0 }) skip: number,
+    @Arg("take", () => Int, { defaultValue: 100 }) take: number,
+    @Arg("orderBy", () => String, { defaultValue: "asc" }) orderBy: string
+  ): Promise<Project[] | unknown> {
+    return await prisma.project.findMany({
+      skip: skip,
+      take: take,
+      orderBy: {
+        id: orderBy as "asc" | "desc",
+      },
+    })
   }
 
   @Query(() => Project, { nullable: true })
@@ -38,7 +25,7 @@ export class ProjectResolver {
     const project = await prisma.project.findUnique({
       where: { id: parseInt(id) },
     })
-    if (!project) throw new Error("Project not found")
+    // TODO: handle errors
     return project
   }
 

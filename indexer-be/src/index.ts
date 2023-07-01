@@ -80,12 +80,3 @@ async function processTxData(txData: any) {
 
 console.log("Indexing finished.")
 console.log("\nListening for new FX Contract operations. Exit with Ctrl+C.\n")
-
-// INFO: If we don't care about the order
-// const promises = projectsHashes.map(async (projectHash) => {
-//   await delay()
-//   const rawTxData = await operationsGetTransactionByHash(projectHash)
-//   return processTxData(rawTxData)
-// })
-
-// await Promise.all(promises)

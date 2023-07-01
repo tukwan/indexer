@@ -2,7 +2,7 @@ import "reflect-metadata"
 import { ApolloServer } from "@apollo/server"
 import { startStandaloneServer } from "@apollo/server/standalone"
 import { buildSchema } from "type-graphql"
-import { ProjectResolver } from "./schema/projects.resolver.js"
+import { ProjectResolver } from "./schema/project.resolver.js"
 
 const schema = await buildSchema({
   resolvers: [ProjectResolver],

@@ -1,0 +1,8 @@
+query getProjects($take: Int, $orderBy: String, $skip: Int) {
+  projects(take: $take, orderBy: $orderBy, skip: $skip) {
+    id
+    ipfsCid
+    artistAddress
+    timeOfMint
+  }
+}

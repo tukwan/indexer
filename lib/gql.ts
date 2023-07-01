@@ -10,7 +10,7 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: number; output: string | number; }
+  ID: { input: number; output: number; }
   String: { input: string; output: string; }
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
@@ -54,24 +54,35 @@ export type QueryProjectArgs = {
   id: Scalars['ID']['input'];
 };
 
+
+export type QueryProjectsArgs = {
+  orderBy?: Scalars['String']['input'];
+  skip?: Scalars['Int']['input'];
+  take?: Scalars['Int']['input'];
+};
+
 export type CreateProjectMutationVariables = Exact<{
   projectInput: ProjectInput;
 }>;
 
 
-export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', id: string | number, ipfsCid: string, artistAddress: string, timeOfMint: any } };
+export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', id: number, ipfsCid: string, artistAddress: string, timeOfMint: any } };
 
 export type GetProjectByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetProjectByIdQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string | number, ipfsCid: string, artistAddress: string, timeOfMint: any } | null };
+export type GetProjectByIdQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: number, ipfsCid: string, artistAddress: string, timeOfMint: any } | null };
 
-export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetProjectsQueryVariables = Exact<{
+  take?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Scalars['String']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
 
 
-export type GetProjectsQuery = { __typename?: 'Query', projects: Array<{ __typename?: 'Project', id: string | number, ipfsCid: string, artistAddress: string, timeOfMint: any }> };
+export type GetProjectsQuery = { __typename?: 'Query', projects: Array<{ __typename?: 'Project', id: number, ipfsCid: string, artistAddress: string, timeOfMint: any }> };
 
 
 export const CreateProjectDocument = gql`
@@ -95,8 +106,8 @@ export const GetProjectByIdDocument = gql`
 }
     `;
 export const GetProjectsDocument = gql`
-    query getProjects {
-  projects {
+    query getProjects($take: Int, $orderBy: String, $skip: Int) {
+  projects(take: $take, orderBy: $orderBy, skip: $skip) {
     id
     ipfsCid
     artistAddress

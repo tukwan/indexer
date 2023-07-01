@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { getProjectById } from "@/lib/api"
+import { getProjectById, getProjects } from "@/lib/api"
 import { Project } from "@/lib/gql"
 import { ipfsToUrl } from "@/lib/utils"
 import { Spinner } from "@/components/Spinner"
@@ -19,7 +19,7 @@ export default function ProjectDetail({
   project: Project
   metadata: ProjectMetadata
 }) {
-  const timeOfMintLocal = useDateTime(project.timeOfMint)
+  const timeOfMintLocal = useDateTime(project?.timeOfMint)
 
   if (!project || !metadata) return <Spinner title="Loading a project..." />
 
@@ -40,9 +40,9 @@ export default function ProjectDetail({
           <p className="mt-2 text-sm text-gray-600">{description}</p>
 
           <div className="mt-4 space-x-2">
-            {tags.map((tag: string, index: number) => (
+            {tags.map((tag: string, i: number) => (
               <span
-                key={index}
+                key={i}
                 className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-2"
               >
                 {tag}
@@ -78,13 +78,42 @@ export default function ProjectDetail({
   )
 }
 
-export async function getServerSideProps({
+export async function getStaticPaths() {
+  const PRELOAD_PROJECTS_NUMBER = 10
+
+  const { projects } = await getProjects({
+    take: PRELOAD_PROJECTS_NUMBER,
+    orderBy: "desc",
+  })
+
+  const paths = projects.map((project) => ({
+    params: { projectId: project.id },
+  }))
+
+  return { paths, fallback: true }
+}
+
+export async function getStaticProps({
   params,
 }: {
   params: { projectId: string }
 }) {
-  const { project } = await getProjectById({ id: params.projectId })
-  const url = ipfsToUrl(project?.ipfsCid!)
+  if (!Number.isInteger(parseInt(params.projectId))) {
+    return {
+      notFound: true,
+    }
+  }
+
+  const { project } = await getProjectById({ id: parseInt(params.projectId) })
+
+  if (!project) {
+    return {
+      notFound: true,
+    }
+  }
+
+  // TODO: Handle errors
+  const url = ipfsToUrl(project?.ipfsCid)
   const res = await fetch(url)
   const metadata = await res.json()
 

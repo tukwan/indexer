@@ -1,4 +1,4 @@
-import { getSdk, Project } from "./gql"
+import { getSdk, ProjectInput } from "./gql"
 import { GraphQLClient } from "graphql-request"
 import {
   MAX_RETRY,
@@ -10,7 +10,7 @@ import {
 const gqlClient = new GraphQLClient(GRAPHQL_API_URL || "")
 const { createProject } = getSdk(gqlClient)
 
-export async function addProjectToDatabase(project: Project) {
+export async function addProjectToDatabase(project: ProjectInput) {
   try {
     await createProject({ projectInput: { ...project } })
   } catch (error) {
