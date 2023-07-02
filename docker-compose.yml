@@ -34,7 +34,7 @@ services:
     build:
       context: ./
     environment:
-      - GRAPHQL_API_URL=http://graphql-api:4000
+      - NEXT_PUBLIC_GRAPHQL_API_URL=http://graphql-api:4000
     ports:
       - "3000:3000"
     depends_on:
